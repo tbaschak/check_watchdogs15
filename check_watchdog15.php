@@ -215,13 +215,13 @@ error_reporting(E_ALL);
  * Note: We use `SNMPv2-SMI::enterprises.17373' rather than
  *       `IT-WATCHDOGS-MIB-V3::' in case the MIB is not installed.
  */
-define('OID_TEMP_UNITS','1.3.6.1.4.1.17373.4.1.1.7.');
-define('OID_CLIMATE_TEMP','1.3.6.1.4.1.17373.4.1.2.1.5.');
-define('OID_CLIMATE_HUMIDITY','1.3.6.1.4.1.17373.4.1.2.1.6.');
+define('OID_TEMP_UNITS','1.3.6.1.4.1.17373.4.1.1.7.0');
+define('OID_CLIMATE_TEMP','1.3.6.1.4.1.17373.4.1.2.1.5.1');
+define('OID_CLIMATE_HUMIDITY','1.3.6.1.4.1.17373.4.1.2.1.6.1');
 define('OID_CLIMATE_IO1','SNMPv2-SMI::enterprises.17373.3.2.1.11.');
 define('OID_CLIMATE_IO2','SNMPv2-SMI::enterprises.17373.3.2.1.12.');
 define('OID_CLIMATE_IO3','SNMPv2-SMI::enterprises.17373.3.2.1.13.');
-define('OID_CLIMATE_DEWPOINT','1.3.6.1.4.1.17373.4.1.2.1.7.');
+define('OID_CLIMATE_DEWPOINT','1.3.6.1.4.1.17373.4.1.2.1.7.1');
 
 // Set some defaults
 // Timeout for SNMP calls
@@ -336,7 +336,7 @@ foreach ($opts as $opt => $value) {
             show_usage();
             my_exit();
         } else {
-            list($cmin, $cmax) = split(':',$val);
+            list($cmin, $cmax) = explode(':',$val);
             $cexcl = ($cmin > $cmax) ? TRUE : FALSE;
         }
         break;
@@ -347,7 +347,7 @@ foreach ($opts as $opt => $value) {
             show_usage();
             my_exit();
         } else {
-            list($wmin, $wmax) = split(':',$val);
+            list($wmin, $wmax) = explode(':',$val);
             $wexcl = ($wmin > $wmax) ? TRUE : FALSE;
         }
         break;
@@ -395,12 +395,16 @@ if (!isset($oid) || empty($oid)) {
 // Get the status from the probe
 // The snmpget functions in PHP 5.2 do not seem to work properly, so
 // we just use the net-snmp commands directly.
-$cmd = escapeshellcmd("snmpget -Oqv -v2c -c $comm -t $timeout $host $oid$unit");
-$result = trim(exec($cmd, $out, $return))/10;
+$cmd = escapeshellcmd("snmpget -Oqv -v2c -c $comm -t $timeout $host $oid");
+$result = trim(exec($cmd, $out, $return));
 
 // Bail if we don't get a proper exit code
 if ($return != 0) {
 	my_unknown("Error connecting to probe $host");
+}
+                               
+if ($oid == OID_CLIMATE_DEWPOINT || $oid == OID_CLIMATE_TEMP) {
+    $result = $result/10;
 }
 
 // Format our message with the appropriate units
