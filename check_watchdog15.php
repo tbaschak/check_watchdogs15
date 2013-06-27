@@ -197,7 +197,23 @@ function my_unknown($msg='') {
     
     my_exit(3, "$label UNKNOWN - $msg");
 }
-
+                               
+/**
+ * my_gettempunits()
+ *
+ * Returns the Temperature Units (0=F,1=C)
+ *
+ * @param string $comm snmp community
+ * @param integer $timeout snmp timeout
+ * @param string $host snmp server/host
+ */
+function my_gettempunits($comm, $timeout, $host) {
+   $cmd = escapeshellcmd("snmpget -Oqv -v2c -c $comm -t $timeout $host OID_TEMP_UNITS");
+   $result = trim(exec($cmd, $out, $return));
+   return($result);
+}
+                               
+                               
 /******** END OF FUNCTIONS ********/
 
 /******** DECLARE CONSTANTS AND DEFAULTS ********/
@@ -268,6 +284,7 @@ foreach ($opts as $opt => $value) {
         switch ($val) {
         case 't':
             // Temperature
+            $tempmath = true;
             $label = 'TEMP';
             if (!isset($opts['s'])) {
                 show_usage();
@@ -297,6 +314,7 @@ foreach ($opts as $opt => $value) {
 
         case 'd':
             // Dewpoint
+            $tempmath = true;
             $label = 'DEWPOINT';
             switch (strtolower($opts['s'])) {
             case 'c':
@@ -403,8 +421,9 @@ if ($return != 0) {
 	my_unknown("Error connecting to probe $host");
 }
                                
-if ($oid == OID_CLIMATE_DEWPOINT || $oid == OID_CLIMATE_TEMP) {
+if ($tempmath) {
     $result = $result/10;
+    
 }
 
 // Format our message with the appropriate units
