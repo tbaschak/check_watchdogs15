@@ -1,2 +1,0 @@
-- [ ] Complete code to detect Temperature units, and convert between
-- [ ] Implement the 4 external sensors
