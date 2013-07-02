@@ -213,6 +213,28 @@ function my_gettempunits($comm, $timeout, $host) {
    return($result);
 }
                                
+/**
+ * my_ctof()
+ *
+ * Returns the Temperature in converted units
+ *
+ * @param integer $temp temperture to convert
+ */
+function my_ctof($temp) {
+    return( intval((9/5)* $temp + 32) );
+}
+/**
+* my_ftoc()
+*
+* Returns the Temperature in converted units
+*
+* @param integer $temp temperture to convert
+*/
+function my_ftoc($temp) {
+    return( intval((5/9)*($temp -32)) );
+}
+
+
                                
 /******** END OF FUNCTIONS ********/
 

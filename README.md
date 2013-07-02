@@ -16,6 +16,6 @@ TEMP OK - 22.8?C | 22.8
 
 Compatibility
 ----------
-This script is based on the check_goose script provided by OnLight, but as the WatchDog15 and WeatherGoose have dofferent OID structure they are not compatible between each other.
+This script is based on the check_goose script provided by OnLight, but as the WatchDog15 and WeatherGoose have different OID structure they are not compatible between each other.
 
 
