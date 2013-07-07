@@ -10,9 +10,9 @@ http://www.itwatchdogs.com/product-detail-watchdog_15poe-72.html
 
 To Use
 ----------
-`php check_watchdog15.php -H 192.168.x.x  -C public -s c -p t`
+`php check_watchdog15.php -H 192.0.2.1  -C public -s c -p t`
 
-TEMP OK - 22.8?C | 22.8
+`TEMP OK - 22.8?C | 22.8`
 
 Compatibility
 ----------
